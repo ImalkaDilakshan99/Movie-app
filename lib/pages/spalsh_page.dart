@@ -21,16 +21,18 @@ class _SpalshPageState extends State<SpalshPage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(
-      Duration(seconds: 1),
-    ).then((_) => _setup(context).then((_) => widget.onInitializationComplete(),));
+    Future.delayed(Duration(seconds: 1)).then(
+      (_) => _setup(context).then((_) => widget.onInitializationComplete()),
+    );
   }
 
   Future<void> _setup(BuildContext _context) async {
     final getIt = GetIt.instance;
 
+    print('Loading configuration...');
     final configFile = await rootBundle.loadString('assets/config/main.json');
     final configData = jsonDecode(configFile);
+    print('Config loaded: ${configData.keys}');
 
     getIt.registerSingleton<AppConfig>(
       AppConfig(
@@ -39,10 +41,15 @@ class _SpalshPageState extends State<SpalshPage> {
         API_KEY: configData['API_KEY'],
       ),
     );
+    print('AppConfig registered');
+    print('API URL: ${configData['BASE_API_URL']}');
 
     getIt.registerSingleton<HttpService>(HttpService());
+    print('HttpService registered');
 
     getIt.registerSingleton<MovieService>(MovieService());
+    print('MovieService registered');
+    print('All services initialized successfully');
   }
 
   @override

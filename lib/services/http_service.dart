@@ -22,10 +22,15 @@ class HttpService {
       if (query != null) {
         _query.addAll(query);
       }
-      return await dio.get(_url, queryParameters: _query);
+      print('Making GET request to: $_url');
+      print('Query params: $_query');
+      Response response = await dio.get(_url, queryParameters: _query);
+      print('Response status: ${response.statusCode}');
+      return response;
     } on DioException catch (e) {
       print('Unable to perform get request.');
       print('DioError: ${e.message}');
+      print('Response: ${e.response?.data}');
       rethrow;
     }
   }

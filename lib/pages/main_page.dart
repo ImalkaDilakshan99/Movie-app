@@ -2,13 +2,23 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:movie_app/controllers/main_page_data_controller.dart';
+import 'package:movie_app/models/main_page_data.dart';
 import 'package:movie_app/models/movie.dart';
 import 'package:movie_app/models/search_category.dart';
 import 'package:movie_app/widgets/movie_tile.dart';
 
+final mainPageDataControllerProvider =
+    StateNotifierProvider<MainPageDataController, MainPageData>((ref) {
+      return MainPageDataController();
+    });
+
 class MainPage extends ConsumerWidget {
   double _deviceHeight = 0;
   double _deviceWidth = 0;
+
+  MainPageDataController? _mainPageDataController;
+  MainPageData? _mainPageData;
 
   TextEditingController? _searchTextFieldController;
 
@@ -16,6 +26,15 @@ class MainPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
+
+    _mainPageDataController = ref.watch(
+      mainPageDataControllerProvider.notifier,
+    );
+    _mainPageData = ref.watch(mainPageDataControllerProvider);
+
+    print(
+      'MainPage rebuild - Movies count: ${_mainPageData?.movies.length ?? 0}',
+    );
 
     _searchTextFieldController = TextEditingController();
     return _buildUI();
@@ -150,22 +169,23 @@ class MainPage extends ConsumerWidget {
   }
 
   Widget _moviesListViewWidget() {
-    final List<Movie> _movies = [];
+    final List<Movie> _movies = _mainPageData!.movies;
 
-    for (var i = 0; i < 20; i++) {
-      _movies.add(
-        Movie(
-          name: "Imalka film",
-          language: "Sinhala",
-          isAdult: false,
-          description: "You need to ensure the value is non-null before passing it.If you are sure the value is never null, use the null assertion",
-          posterPath: "/yvirUYrva23IudARHn3mMGVxWqM.jpg",
-          backdropPath: "/iZLqwEwUViJdSkGVjePGhxYzbDb.jpg",
-          rating: 4.5,
-          releaseDate: "2025-11-22",
-        ),
-      );
-    }
+    // for (var i = 0; i < 20; i++) {
+    //   _movies.add(
+    //     Movie(
+    //       name: "Imalka film",
+    //       language: "Sinhala",
+    //       isAdult: false,
+    //       description:
+    //           "You need to ensure the value is non-null before passing it.If you are sure the value is never null, use the null assertion",
+    //       posterPath: "/yvirUYrva23IudARHn3mMGVxWqM.jpg",
+    //       backdropPath: "/iZLqwEwUViJdSkGVjePGhxYzbDb.jpg",
+    //       rating: 4.5,
+    //       releaseDate: "2025-11-22",
+    //     ),
+    //   );
+    // }
 
     if (_movies.length != 0) {
       return ListView.builder(

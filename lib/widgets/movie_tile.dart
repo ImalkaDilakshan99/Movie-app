@@ -36,21 +36,27 @@ class MovieTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: width! * 0.56,
-                child: Text(
-                  movie!.name ?? 'Unknown',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22,
-                    fontWeight: FontWeight.w400,
+              Expanded(
+                child: Container(
+                  child: Text(
+                    movie!.name ?? 'Unknown',
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
               ),
-              Text(
-                (movie?.rating ?? 0.0).toString(),
-                style: TextStyle(color: Colors.white, fontSize: 22),
+              SizedBox(width: 8),
+              Container(
+                constraints: BoxConstraints(maxWidth: width! * 0.15),
+                child: Text(
+                  (movie?.rating ?? 0.0).toString(),
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(color: Colors.white, fontSize: 22),
+                ),
               ),
             ],
           ),
