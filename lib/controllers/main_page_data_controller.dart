@@ -26,10 +26,13 @@ class MainPageDataController extends StateNotifier<MainPageData> {
         } else if (state.searchCategory == SearchCategory.none) {
           _movies = [];
         }
-      }else{
-        //perform search text
+      } else {
+        _movies = await _movieService.searchMovies(
+          state.searchText,
+          page: state.page,
+        );
       }
-      
+
       print('Successfully fetched ${_movies.length} movies');
       state = state.copyWith(
         movies: [...state.movies, ..._movies],
@@ -49,6 +52,20 @@ class MainPageDataController extends StateNotifier<MainPageData> {
         page: 1,
         searchCategory: _category,
         searchText: '',
+      );
+      getMovies();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void updateTextSearch(String _searchText) {
+    try {
+      state = state.copyWith(
+        movies: [],
+        page: 1,
+        searchCategory: SearchCategory.none,
+        searchText: _searchText,
       );
       getMovies();
     } catch (e) {

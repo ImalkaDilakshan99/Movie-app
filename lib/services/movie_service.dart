@@ -52,7 +52,31 @@ class MovieService {
       return _movies;
     } else {
       print('Bad status code: ${_response.statusCode}');
-      throw Exception('Couldn\' t load popular movies');
+      throw Exception('Couldn\' t load upcoming movies');
+    }
+  }
+
+  Future<List<Movie>> searchMovies(String _searchTerm,{int? page}) async {
+    print('MovieService: Fetching popular movies for page: $page');
+    Response _response = await _http.get(
+      'search/movie',
+      query: {
+        'query':_searchTerm,
+        'page': page},
+    );
+
+    if (_response.statusCode == 200) {
+      Map _data = _response.data;
+      print('Response data keys: ${_data.keys}');
+      print('Results count: ${_data['results']?.length ?? 0}');
+      List<Movie> _movies = _data['results'].map<Movie>((_movieData) {
+        return Movie.fromJson(_movieData);
+      }).toList();
+      print('Parsed ${_movies.length} movies');
+      return _movies;
+    } else {
+      print('Bad status code: ${_response.statusCode}');
+      throw Exception('Couldn\' t perform search movies');
     }
   }
 }
